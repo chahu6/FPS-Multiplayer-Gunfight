@@ -19,7 +19,7 @@ struct FDeathMatchPlayerData
 	FName PlayerName;
 
 	UPROPERTY(BlueprintReadWrite)
-	int PlayerScore;
+	int32 PlayerScore;
 
 	FDeathMatchPlayerData()
 	{
@@ -37,5 +37,5 @@ class MULTIFPSGAME_API UKismetMultiFPSLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "Sort")
 	static void SortValues(UPARAM(ref)TArray<FDeathMatchPlayerData>& Values);
 
-	static TArray<FDeathMatchPlayerData>& Qsort(UPARAM(ref)TArray<FDeathMatchPlayerData>& Values, int l, int r);
+	static void Qsort(UPARAM(ref)TArray<FDeathMatchPlayerData>& Values, int32 L, int32 R);
 };

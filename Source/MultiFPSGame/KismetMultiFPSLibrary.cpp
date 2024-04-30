@@ -1,39 +1,30 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "KismetMultiFPSLibrary.h"
 
 void UKismetMultiFPSLibrary::SortValues(UPARAM(ref)TArray<FDeathMatchPlayerData>& Values)
 {
-	//Values.Sort([](const FDeathMatchPlayerData& a, const FDeathMatchPlayerData& b) {return a.PlayerScore > b.PlayerScore; });
-	Qsort(Values, 0, Values.Num() - 1);
+	Values.Sort([](const FDeathMatchPlayerData& a, const FDeathMatchPlayerData& b) {return a.PlayerScore > b.PlayerScore; });
+	//Qsort(Values, 0, Values.Num());
 }
 
-TArray<FDeathMatchPlayerData>& UKismetMultiFPSLibrary::Qsort(UPARAM(ref)TArray<FDeathMatchPlayerData>& Values, int l, int r)
+void UKismetMultiFPSLibrary::Qsort(UPARAM(ref)TArray<FDeathMatchPlayerData>& Values, int32 L, int32 R)
 {
-	if (l >= r)
-	{
-		return Values;
-	}
-	int i = l;
-	int j = r;
-	FDeathMatchPlayerData mid = Values[(l + r) / 2];
-	FDeathMatchPlayerData temp;
-	do
-	{
-		while (Values[i].PlayerScore > mid.PlayerScore)i++;
-		while (Values[j].PlayerScore < mid.PlayerScore)j--;
-		if (i <= j)
-		{
-			temp = Values[i];
-			Values[i] = Values[j];
-			Values[j] = temp;
-			i++;
-			j--;
-		}
-	} while (i <= j);
-	if (l < j) Qsort(Values, l, j);
-	if (i < r) Qsort(Values, i, r);
+	if (L + 1 >= R) return;
+	int32 First = L;
+	int32 Last = R - 1;
+	FDeathMatchPlayerData Key = Values[First];
 
-	return Values;
+	while (First < Last)
+	{
+		while (First < Last && Values[Last].PlayerScore >= Key.PlayerScore) --Last;
+		Values[First] = Values[Last];
+		while (First < Last && Values[First].PlayerScore <= Key.PlayerScore) ++First;
+		Values[Last] = Values[First];
+	}
+
+	Values[First] = Key;
+	Qsort(Values, L, First);
+	Qsort(Values, First + 1, R);
 }
